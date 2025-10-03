@@ -106,11 +106,55 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "htool_security_tokens",
+    srcs = ["htool_security_tokens.c"],
+    hdrs = ["htool_security_tokens.h"],
+    deps = [
+        ":host_commands",
+        ":htool_cmd",
+        ":htool_header",
+        ":htool_macros",
+        ":htool_security_v2",
+        ":htool_security_v2_defs",
+        ":htool_security_version",
+        "//protocol:host_cmd",
+    ],
+    linkopts = ["-lcrypto"],
+)
+
 cc_test(
     name = "htool_security_certificates_test",
     srcs = ["htool_security_certificates_test.cc"],
     deps = [
         ":htool_security_certificates",
+        ":htool_security_v2",
+        ":htool_security_version",
+        "//examples/test:test_util",
+        "//protocol/test:libhoth_device_mock",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "htool_security_tokens_test",
+    srcs = ["htool_security_tokens_test.cc"],
+    deps = [
+        ":htool_security_tokens",
+        ":htool_security_v2",
+        ":htool_security_version",
+        "//examples/test:test_util",
+        "//protocol/test:libhoth_device_mock",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "htool_security_v2_test",
+    srcs = ["htool_security_v2_test.cc"],
+    deps = [
         ":htool_security_v2",
         ":htool_security_version",
         "//examples/test:test_util",
@@ -177,6 +221,8 @@ cc_binary(
         "htool_security_certificates.c",
         "htool_security_certificates.h",
         "htool_security_v2_defs.h",
+        "htool_security_tokens.c",
+        "htool_security_tokens.h",
     ],
     deps = [
         ":host_commands",
@@ -209,6 +255,7 @@ cc_binary(
         ":dbus_backend": ["//transports:libhoth_dbus"],
         "//conditions:default": [],
     }),
+    linkopts = ["-lcrypto"],
 )
 
 cc_test(
